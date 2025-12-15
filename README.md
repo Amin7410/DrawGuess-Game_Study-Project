@@ -2,15 +2,6 @@
 
 A real-time multiplayer game where players take turns drawing and guessing words. Built with Socket.IO, Express, and vanilla JavaScript.
 
-## 🚀 WANT TO DEPLOY NOW?
-
-**Read this file**: [`START_HERE.md`](./START_HERE.md)
-
-Or run:
-```powershell
-.\deploy-now.ps1
-```
-
 **Repo**: `https://github.com/Amin7410/Game.git`
 
 ---
