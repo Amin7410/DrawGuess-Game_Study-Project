@@ -64,7 +64,7 @@ socket.on('join-game', (data) => {
 ```
 Client Server
 
-| |
+|                           |
 
 |--- SYN ----------------->| (Requesting connection)
 
@@ -72,10 +72,10 @@ Client Server
 
 |--- ACK ----------------->| (Confirmation)
 
-| |
+|                          |
 |=== CONNECTED ============|
 
-| |
+|                          |
 
 |--- Data packet 1 ------->|
 
@@ -102,7 +102,7 @@ Client Server
 ```
 Client Server
 
-| |
+|                         |
 
 |--- Data packet 1 ------->| (Send immediately, no need to worry)
 
@@ -110,7 +110,7 @@ Client Server
 
 |--- Data packet 3 ------->|
 
-| |
+|                          |
 
 (No ACK, don't know if received)
 ```
@@ -145,19 +145,19 @@ transports: ['websocket', 'polling'] // Both use TCP
 
 Client Server
 
-| |
+|                          |
 
 |--- Request ------------->| (Requests data)
 
 |<-- Response -------------| (Returns data)
 
-| |
+|                          |
 
 --- Request ------------->| (Requests data again)
 
 |<-- Response -------------| (Returns data)
 
-| |
+|                          |
 
 (A new connection must be established each time)
 
@@ -165,17 +165,17 @@ Client Server
 
 Client Server
 
-| |
+|                          |
 
 |--- Handshake ----------->| (Requests an upgrade to WebSocket)
 
 |<-- Upgrade OK -----------| (OK, upgrade)
 
-| |
+|                          |
 
 === CONNECTED ============| (Continuous connection)
 
-| |
+|                          |
 
 |--- Message 1 ----------->|
 
@@ -185,7 +185,7 @@ Client Server
 
 |<-- Message 4 ------------|
 
-| |
+|                          |
 
 (Connection remains open, no need to re-establish)
 
@@ -276,32 +276,32 @@ transports: ['websocket', 'polling'] // Prioritize WebSocket
 
 ```
 ┌─────────────────────────────────────┐
-│ Socket.IO Library │
-│ - Auto-reconnection │
-│ - Fallback to polling │
-│ - Rooms & Namespaces │
-│ - Custom events │
-│ - Acknowledgments │
-│ - Broadcasting │
-└───────────────┬──────────────────────┘
+│ Socket.IO Library                   │
+│ - Auto-reconnection                 │
+│ - Fallback to polling               │
+│ - Rooms & Namespaces                │
+│ - Custom events                     │
+│ - Acknowledgments                   │
+│ - Broadcasting                      │
+└───────────────┬─────────────────────┘
 
-│ 
+                │ 
 
-▼
+                ▼
 ┌─────────────────────────────────────┐
-│ WebSocket Protocol │
-│ - Bidirectional communication │
-│ - Persistent connection │
-│ - Low latency │
-└───────────────┬──────────────────────┘
+│ WebSocket Protocol                  │
+│ - Bidirectional communication       │
+│ - Persistent connection             │
+│ - Low latency                       │
+└───────────────┬─────────────────────┘
 
-│ 
+                │ 
 
-▼
+                ▼
 ┌─────────────────────────────────────┐
-│ TCP │
-│ - Reliable, ordered delivery │
-└──────────────────────────────────────┘
+│ TCP                                 │
+│ - Reliable, ordered delivery        │
+└─────────────────────────────────────┘
 ```
 
 ### Socket.IO Features in the Project:
@@ -373,164 +373,167 @@ console.log('Reconnected after', attemptNumber, 'attempts');
 ### 5.1. Connection Flow
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ STEP 1: CLIENT OPENS WEBSITE │
-└───────────────┬──────────────────────────────────────────────────┘
+┌─────────────────────────────────────┐
+│ STEP 1: CLIENT OPENS WEBSI          │
+└───────────────┬─────────────────────┘
 
-│ 
+                │ 
 
-▼
-┌────────────────────────────── ───────────────────────────────┐
-│ STEP 2: LOAD HTML, CSS, JS │
-│ - Browser downloads index.html │
-│ - Load app.js, config.js │
-│ - Load Socket.IO client library │
-└──────────────┬─────────────── ───────────────────────────────┘ 
-│
-▼
-┌─────────────────────────────────────────────────────────────────────┐
-│ STEP 3: INITIATE SOCKET.IO CLIENT │
-│ const socket = io(serverUrl + '/game', { │
-│ transports: ['websocket', 'polling'] │
-│ }); │
-└──────────────┬─────────────── ───────────────────────────────┘ 
-│ 
-▼
-┌────────────────────────────── ───────────────────────────────┐
-│ STEP 4: WEBSOCKET HANDSHAKE │
-│ Client: GET /game HTTP/1.1 │
-│ Upgrade: websockets │
+                ▼
+┌───────────────────────────────────────────┐
+│ STEP 2: LOAD HTML, CSS, JS                │
+│ - Browser downloads index.html            │
+│ - Load app.js, config.js                  │
+│ - Load Socket.IO client library           │
+└─────────────┬─────────────────────────────┘ 
+
+              │ 
+
+              ▼
+┌──────────────────────────────────────────────┐
+│ STEP 3: INITIATE SOCKET.IO CLIENT            │
+│ const socket = io(serverUrl + '/game', {     │
+│ transports: ['websocket', 'polling']         │
+│ });                                          │
+└─────────────┬───────────────────────────────┘ 
+              │ 
+
+              ▼
+┌──────────────────────────────────────────┐
+│ STEP 4: WEBSOCKET HANDSHAKE              │
+│ Client: GET /game HTTP/1.1               │
+│ Upgrade: websockets                      │
 │ Server: HTTP/1.1 101 Switching Protocols │
-│ Upgrade: websocket │
-└──────────────┬─────────────── ───────────────────────────────┘ 
-│
-▼
-┌──────────────────────────────────────────────────────────────────────┐
-│ STEP 5: CONNECTION SUCCESSFUL │
-│ Client: socket.on('connect', () => { │
-│ console.log('Connected!', socket.id);│
-│ }); │
-│ │
-│ Server: gameNamespace.on('connection', (socket) => { │
-│ console.log('New connection:', socket.id); │
-│ }); │
-└──────────────────────────────────────────────────────────────────────────┘
+│ Upgrade: websocket                       │
+└─────────────┬────────────────────────────┘ 
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 5: CONNECTION SUCCESSFUL                               │
+│ Client: socket.on('connect', () => {                        │
+│ console.log('Connected!', socket.id);                       │
+│ });                                                         │
+│                                                             │
+│ Server: gameNamespace.on('connection', (socket) => {        │
+│ console.log('New connection:', socket.id);                  │
+│ });                                                         │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### 5.2. Room Creation Flow
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│ CLIENT │
-└──────────────┬─────────────── ───────────────────────────────┘ 
-│ 
-│ 1. User enters name, room ID, password 
-│ 2. Click "Create Room" 
-│ 
-▼
-┌────────────────────────────── ───────────────────────────────┐
-│ socket.emit('lobby:create-room', { │
-│ playerName: 'Amin', │
-│ roomId: '123', │
-│ password: 'abc' │
-│ }, (response) => { │
-│ // Callback receives response │
-│ }); │
-└──────────────┬─────────────── ───────────────────────────────┘ 
-│ 
-│ Event via WebSocket 
-│ 
-▼
-┌────────────────────────────── ───────────────────────────────┐
-│ SERVER (mainHandler.js) │
-└───────────────┬──────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│ CLIENT                                                  │
+└─────────────┬───────────────────────────────────────────┘ 
+              │ 
+              │ 1. User enters name, room ID, password 
+              │ 2. Click "Create Room" 
+              │ 
+              ▼
+┌──────────────────────────────────────────────────────────┐
+│ socket.emit('lobby:create-room', {                       │
+│ playerName: 'Amin',                                      │
+│ roomId: '123',                                           │
+│ password: 'abc'                                          │
+│ }, (response) => {                                       │
+│ // Callback receives response                            │
+│ });                                                      │
+└─────────────┬────────────────────────────────────────────┘ 
+              │ 
+              │ Event via WebSocket 
+              │ 
+              ▼
+┌───────────────────────────────────────────────────────────┐
+│ SERVER (mainHandler.js)                                   │
+└───────────────┬───────────────────────────────────────────┘
 
-│ 
-
-▼
-┌────────────────────────────── ───────────────────────────────┐
-│ socket.on('lobby:create-room', (data, callback) => { │
-│ // 1. Validate data │
-│ if (!data.playerName) { │
-│ return callback({ success: false, message: 'Error' }); │
-│ } │
-│ │
-│ // 2. Create a new room │
-│ const newRoom = new GameRoom(roomId, broadcast, {...}); │
-│ rooms.set(roomId, newRoom); │
-│ │
-│ // 3. Broadcast room list update │
-│ broadcastRoomListUpdate(); │
-│ │
-│ // 4. Call callback │
-│ callback({ success: true, roomId }); │
-│ }); │
-└──────────────┬─────────────── ───────────────────────────────┘ 
-│ 
-│ Response via WebSocket 
-│ 
-▼
-┌────────────────────────────── ───────────────────────────────┐
-│ CLIENT │
-│ (response) => { │
-│ if (response.success) { │
-│ window.location.href = `game?room=${response.roomId}`; │
-│ } │
-│ } │
-└───────────────────────────────────────────────────────────────────────────────┘
+                │ 
+                
+                ▼
+┌──────────────────────────────────────────────────────────┐
+│ socket.on('lobby:create-room', (data, callback) => {     │
+│ // 1. Validate data                                      │
+│ if (!data.playerName) {                                  │
+│ return callback({ success: false, message: 'Error' });   │
+│ }                                                        │
+│                                                          │
+│ // 2. Create a new room                                  │
+│ const newRoom = new GameRoom(roomId, broadcast, {...});  │
+│ rooms.set(roomId, newRoom);                              │
+│                                                          │
+│ // 3. Broadcast room list update                         │
+│ broadcastRoomListUpdate();                               │
+│                                                          │
+│ // 4. Call callback                                      │
+│ callback({ success: true, roomId });                     │
+│ });                                                      │
+└───────────────┬──────────────────────────────────────────┘ 
+                │ 
+                │ Response via WebSocket 
+                │ 
+                ▼
+┌──────────────────────────────────────────────────────────┐
+│ CLIENT                                                   │
+│ (response) => {                                          │
+│ if (response.success) {                                  │
+│ window.location.href = `game?room=${response.roomId}`;   │
+│ }                                                        │
+│ }                                                        │
+└──────────────────────────────────────────────────────────┘
 ```
 
 ### 5.3. Drawing Flow
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│ PLAYER 1 (Drawer) │
-└───────────────┬───────────────────────────────────────────────────┘
-│
-
-│ 1. User draws on the canvas
-
-│ 2. Mouse move event
-
-│ 
-
-▼
+┌──────────────────────────────────────────┐
+│ PLAYER 1 (Drawer)                        │
+└───────────────┬──────────────────────────┘
+                │
+                
+                │ 1. User draws on the canvas
+                
+                │ 2. Mouse move event
+                
+                │ 
+                
+                ▼
+┌──────────────────────────────────────────────────────────┐
+│ function draw(e) {                                       │
+│ // Draw locally                                          │
+│ drawLocal(x0, y0, x1, y1, color, size);                  │
+│                                                          │
+│ // Send to server                                        │
+│ socket.emit('draw', {                                    │
+│ x0, y0, x1, y1, color, size, tool                        │
+│ });                                                      │                       
+│ }                                                        │
+└─────────────┬────────────────────────────────────────────┘ 
+              │ 
+              │ Event via WebSocket 
+              │ 
+              ▼
+┌────────────────────────────────────────────────────────────┐
+│ SERVER                                                     │
+│ socket.on('draw', (data) => {                              │
+│ const player = players.get(socket.id);                     │
+│                                                            │
+│ // Broadcast to room (except sender)                       │
+│ socket.to(player.roomId).emit('draw', data);               │
+│ });                                                        │
+└─────────────┬──────────────────────────────────────────────┘ 
+              │ 
+              │ Broadcast via WebSocket 
+              │ 
+              ▼
 ┌────────────────────────────── ───────────────────────────────┐
-│ function draw(e) { │
-│ // Draw locally │
-│ drawLocal(x0, y0, x1, y1, color, size); │
-│ │
-│ // Send to server │
-│ socket.emit('draw', { │
-│ x0, y0, x1, y1, color, size, tool │
-│ }); │
-│ } │
-└──────────────┬─────────────── ───────────────────────────────┘ 
-│ 
-│ Event via WebSocket 
-│ 
-▼
-┌────────────────────────────── ───────────────────────────────┐
-│ SERVER │
-│ socket.on('draw', (data) => { │
-│ const player = players.get(socket.id); │
-│ │
-│ // Broadcast to room (except sender) │
-│ socket.to(player.roomId).emit('draw', data); │
-│ }); │
-└──────────────┬─────────────── ───────────────────────────────┘ 
-│ 
-│ Broadcast via WebSocket 
-│ 
-▼
-┌────────────────────────────── ───────────────────────────────┐
-│ PLAYER 2, 3, 4... (Guessers) │
-│ socket.on('draw', (data) => { │
-│ if (!isDrawer) { │
-│ drawRemote(data); // Draw on canvas │
-│ } │
-│ }); │
-└──────────────────────────────────────────────────────────────────────────┘
+│ PLAYER 2, 3, 4... (Guessers)                                 │
+│ socket.on('draw', (data) => {                                │
+│ if (!isDrawer) {                                             │
+│ drawRemote(data); // Draw on canvas                          │
+│ }                                                            │
+│ });                                                          │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### 5.4. Node.js Event Loop
@@ -538,36 +541,47 @@ console.log('Reconnected after', attemptNumber, 'attempts');
 Node.js handles **asynchronous** operations using the **Event Loop**:
 
 ```
-┌────────────────────────────┐
-│ Event Queue │
-│ - socket.on('draw') │
-│ - socket.on('chat') │
+┌──────────────────────────────────┐
+│          Event Sources           │
+│  - socket.on('draw')             │
+│  - socket.on('chat')             │
+│  - setTimeout / setInterval      │
+│  - I/O callbacks                 │
+│  - Promises (microtasks)         │
+└───────────────┬──────────────────┘
+                │
+                ▼
+┌──────────────────────────────────┐
+│            Event Queue           │
+│  - Callback Tasks (macrotasks)   │
+│  - Microtask Queue (Promises)    │
+└───────────────┬──────────────────┘
+                │
+                ▼
+┌──────────────────────────────────┐
+│            Event Loop            │
+│  while (running) {               │
+│    processMicrotasks();          │
+│    task = eventQueue.pop();      │
+│    task.execute();               │
+│  }                               │
+└───────────────┬──────────────────┘
+                │
+                ▼
+┌──────────────────────────────────┐
+│        Execute Callback          │
+│  - Application Logic             │
+│  - State Updates                 │
+│  - Database / I/O Requests       │
+│  - Emit New Events               │
+└───────────────┬──────────────────┘
+                │
+                ▼
+┌──────────────────────────────────┐
+│        Back to Event Sources     │
+│   (new events scheduled)         │
+└──────────────────────────────────┘
 
-│ - setTimeout callback │
-
-│ - ... │
-└──────────┬────────────────┘ 
-│ 
-▼
-┌───────────────────────────┐
-│ Event Loop │
-│ while (true) { │
-│ event = queue.pop(); │
-│ event.execute(); │
-│ } │
-└──────────┬────────────────┘
-
-│
-
-▼
-┌────────────────────────────┐
-│ Execute Callback │
-│ - Logic Processing │
-
-│ - Database Call │
-
-│ - Emit events │
-└───────────────────────────┘
 ```
 
 **Example**:
@@ -666,26 +680,43 @@ this.broadcast('timer-update', { timeLeft: this.timeLeft });
 #### Node.js Single-Threaded Model:
 
 ```
-┌──────────────────────────────────────┐
-│ Main Thread (JavaScript) │
+┌──────────────────────────────────────────┐
+│        Main Thread (JavaScript)          │
+│                                          │
+│  - Execute JS code                       │
+│  - Event Loop                            │
+│  - Callbacks / Promises                  │
+│  - Non-blocking logic                    │
+│                                          │
+│  Single-threaded execution               │
+└───────────────┬──────────────────────────┘
+                │
+     async request (I/O, crypto, fs)
+                │
+                ▼
+┌──────────────────────────────────────────┐
+│     Native Layer / Thread Pool (C++)     │
+│            (libuv)                       │
+│                                          │
+│  - File system operations                │
+│  - Network operations                    │
+│  - DNS lookup                            │
+│  - Crypto / compression                  │
+│                                          │
+│   Managed automatically                  │
+│   No manual threading in JS              │
+└───────────────┬──────────────────────────┘
+                │
+     completion callback / promise resolve
+                │
+                ▼
+┌──────────────────────────────────────────┐
+│        Event Queue / Microtasks          │
+│  - I/O callbacks                         │
+│  - Timers                                │
+│  - Promise resolutions                   │
+└──────────────────────────────────────────┘
 
-│ - Handles all logic │
-
-│ - Event loop │
-
-│ - No blocking │
-└───────────────┬──────────────────────┘
-
-│
-
-▼
-┌──────────────────────────────────────┐
-│ Thread Pool (C++) │
-│ - File I/O │
-│ - Network I/O │
-│ - Crypto operations │
-│ (Automatic, no coding required) │
-└─────────────────────────────────────┘
 ```
 
 #### Why Multithreading Is Not Necessary?
@@ -760,36 +791,51 @@ Reason: Event loop + Non-blocking I/O
 ### Technology Stack:
 
 ```
-┌─────────────────────────────────────┐
-│ Application Layer │
-│ - Socket.IO (Custom events) │
-│ - Namespaces, Rooms │
-└───────────────┬──────────────────────┘
+┌────────────────────────────────────────┐
+│          Application Layer             │
+│                                        │
+│  - Socket.IO                           │
+│  - Custom events (emit / on)           │
+│  - Namespaces, Rooms                   │
+│  - Message serialization               │
+└───────────────┬────────────────────────┘
+                │
+                ▼
+┌────────────────────────────────────────┐
+│     Transport Abstraction (Socket.IO)  │
+│                                        │
+│  - WebSocket                           │
+│  - HTTP Long Polling (fallback)        │
+│                                        │
+│  Socket.IO ≠ WebSocket                 │
+└───────────────┬────────────────────────┘
+                │
+                ▼
+┌────────────────────────────────────────┐
+│        WebSocket Protocol              │
+│                                        │
+│  - Full-duplex                         │
+│  - Persistent connection               │
+│  - Frame-based messaging               │
+└───────────────┬────────────────────────┘
+                │
+                ▼
+┌────────────────────────────────────────┐
+│            TCP Protocol                │
+│                                        │
+│  - Reliable                            │
+│  - Ordered                             │
+│  - Congestion control                  │
+└───────────────┬────────────────────────┘
+                │
+                ▼
+┌────────────────────────────────────────┐
+│             IP Layer                   │
+│                                        │
+│  - Addressing                          │
+│  - Routing                             │
+└────────────────────────────────────────┘
 
-│ 
-
-▼
-┌─────────────────────────────────────┐
-│ WebSocket Protocol │
-│ - Bidirectional │
-│ - Persistent connection │
-└───────────────┬──────────────────────┘
-
-│ 
-
-▼
-┌─────────────────────────────────────┐
-│ TCP Protocol │
-│ - Reliable, ordered │
-└───────────────┬──────────────────────┘
-
-│ 
-
-▼
-┌─────────────────────────────────────┐
-│ IP Protocol │
-│ - Routing, addressing │
-└──────────────────────────────────────┘
 ```
 
 ### Short Answers:
