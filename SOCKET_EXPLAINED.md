@@ -1,156 +1,198 @@
-# 🔌 Giải Thích Chi Tiết: Socket, WebSocket, Socket.IO
+# 🔌 Detailed Explanation: Socket, WebSocket, Socket.IO
 
-## 📚 Mục Lục
-1. [Socket Là Gì?](#1-socket-là-gì)
+## 📚 Table of Contents
+1. [What is a Socket?](#1-what-is-a-socket)
 2. [TCP vs UDP](#2-tcp-vs-udp)
-3. [WebSocket Là Gì?](#3-websocket-là-gì)
-4. [Socket.IO Là Gì?](#4-socketio-là-gì)
-5. [Luồng Xử Lý](#5-luồng-xử-lý)
+3. [What is a WebSocket?](#3-what-is-a-websocket)
+4. [What is Socket.IO?](#4-what-is-socket.IO)
+5. [Processing Threads](#5-processing-threads)
 6. [Multicast & Multithreading](#6-multicast--multithreading)
 
 ---
+## 1. 🔌 What is a Socket?
 
-## 1. 🔌 Socket Là Gì?
+### Definition:
+**Socket** = The endpoint of a network connection between two computers.
 
-### Định Nghĩa:
-**Socket** = Điểm cuối (endpoint) của kết nối mạng giữa 2 máy tính.
-
-### Ví Dụ Đơn Giản:
+### Simple Example:
 ```
-Socket = Ổ cắm điện
-- Máy tính A có 1 ổ cắm (socket)
-- Máy tính B có 1 ổ cắm (socket)
-- Dây điện = Kết nối mạng
-- Cắm vào → Giao tiếp được
+Socket = Power outlet
+- Computer A has 1 power outlet (socket)
+- Computer B has 1 power outlet (socket)
+- Power cord = Network connection
+- Plug in → Communication is possible
 ```
 
-### Trong Lập Trình:
+### In Programming:
 ```javascript
-// Socket = Đối tượng đại diện cho 1 kết nối
-socket.id = "abc123"  // ID duy nhất
-socket.emit('message', data)  // Gửi data
-socket.on('message', callback)  // Nhận data
+// Socket = Object representing a connection
+socket.id = "abc123" // Unique ID
+socket.emit('message', data) // Send data
+socket.on('message', callback) // Receive data
 ```
 
-### Socket Trong Dự Án:
+### Sockets in a Project:
 ```javascript
-// Server: Mỗi client kết nối = 1 socket
+// Server: Each client connection = 1 socket
 gameNamespace.on('connection', (socket) => {
-  console.log('Socket ID:', socket.id);  // Mỗi người chơi có 1 ID
-  
-  socket.on('join-game', (data) => {
-    // Xử lý khi người chơi join
-  });
+console.log('Socket ID:', socket.id); // Each player has 1 ID
+
+socket.on('join-game', (data) => {
+
+// Handle when a player joins
+
 });
+
+});
+
 ```
 
 ---
-
 ## 2. 🔀 TCP vs UDP
 
 ### 2.1. TCP (Transmission Control Protocol)
 
-**Đặc điểm**:
-- ✅ **Reliable** (Đáng tin cậy): Đảm bảo data đến đích
-- ✅ **Ordered** (Có thứ tự): Data đến đúng thứ tự gửi
-- ✅ **Connection-oriented**: Phải thiết lập kết nối trước
-- ❌ **Chậm hơn UDP**: Do phải check và retry
+**Characteristics**:
 
-**Cách Hoạt Động**:
+- ✅ **Reliable**: Ensures data reaches its destination
+- ✅ **Ordered**: Data arrives in the correct order
+- ✅ **Connection-oriented**: Requires establishing a connection beforehand
+- ❌ **Slower than UDP**: Due to the need for checking and retrying
+
+**How ​​it Works**:
+
 ```
-Client                    Server
-  |                          |
-  |--- SYN ----------------->|  (Xin kết nối)
-  |<-- SYN-ACK --------------|  (OK, đồng ý)
-  |--- ACK ----------------->|  (Xác nhận)
-  |                          |
-  |=== CONNECTED ============|
-  |                          |
-  |--- Data packet 1 ------->|
-  |<-- ACK ------------------|  (Đã nhận packet 1)
-  |--- Data packet 2 ------->|
-  |<-- ACK ------------------|  (Đã nhận packet 2)
+Client Server
+
+| |
+
+|--- SYN ----------------->| (Requesting connection)
+
+|<-- SYN-ACK --------------| (OK, agree)
+
+|--- ACK ----------------->| (Confirmation)
+
+| |
+|=== CONNECTED ============|
+
+| |
+
+|--- Data packet 1 ------->|
+
+|<-- ACK ------------------| (Packet 1 received)
+
+|--- Data packet 2 ------->|
+
+|<-- ACK ------------------| (Packet 2 received)
 ```
 
-**Ví Dụ**: HTTP, HTTPS, WebSocket (dùng TCP)
+**Example**: HTTP, HTTPS, WebSocket (using TCP)
 
 ### 2.2. UDP (User Datagram Protocol)
 
-**Đặc điểm**:
-- ✅ **Fast** (Nhanh): Không cần check/retry
-- ❌ **Unreliable**: Data có thể mất
-- ❌ **Unordered**: Data đến không đúng thứ tự
-- ✅ **Connectionless**: Không cần thiết lập kết nối
+**Characteristics**:
 
-**Cách Hoạt Động**:
+- ✅ **Fast**: No need to check/retry
+- ❌ **Unreliable**: Data may be lost
+- ❌ **Unordered**: Data arrives out of order
+- ✅ **Connectionless**: No need to establish a connection
+
+**How ​​it works**:
+
 ```
-Client                    Server
-  |                          |
-  |--- Data packet 1 ------->|  (Gửi luôn, không care)
-  |--- Data packet 2 ------->|
-  |--- Data packet 3 ------->|
-  |                          |
-  (Không có ACK, không biết đã nhận chưa)
+Client Server
+
+| |
+
+|--- Data packet 1 ------->| (Send immediately, no need to worry)
+
+|--- Data packet 2 ------->|
+
+|--- Data packet 3 ------->|
+
+| |
+
+(No ACK, don't know if received)
 ```
 
-**Ví Dụ**: Video streaming, Gaming (FPS games), DNS
+**Example**: Video streaming, Gaming (FPS games), DNS
 
-### 2.3. Dự Án Này Dùng Gì?
+### 2.3. What does this project use?
 
-**Dùng TCP** (qua WebSocket):
-- ✅ Cần đảm bảo data đến đích (chat, drawing)
-- ✅ Cần thứ tự (vẽ stroke theo thứ tự)
-- ✅ Không cần tốc độ cực nhanh
+**Uses TCP** (via WebSocket):
+
+- ✅ Needs to ensure data reaches its destination (chat, drawing)
+- ✅ Needs to be in order (draw strokes in order)
+- ✅ Doesn't need to be extremely fast
 
 ```javascript
-// WebSocket dùng TCP
+// WebSocket using TCP
 const io = new Server(server, {
-  transports: ['websocket', 'polling']  // Cả 2 đều dùng TCP
+transports: ['websocket', 'polling'] // Both use TCP
 });
+
 ```
 
 ---
+## 3. 🌐 What is a WebSocket?
 
-## 3. 🌐 WebSocket Là Gì?
+### Definition:
+**WebSocket** = A protocol that allows **two-way** (bidirectional) communication between a client and a server via a **single connection**.
 
-### Định Nghĩa:
-**WebSocket** = Giao thức cho phép giao tiếp **2 chiều** (bidirectional) giữa client và server qua **1 kết nối duy nhất**.
-
-### So Sánh HTTP vs WebSocket:
+### Comparison of HTTP vs. WebSocket:
 
 #### HTTP (Request-Response):
-```
-Client                    Server
-  |                          |
-  |--- Request ------------->|  (Xin data)
-  |<-- Response -------------|  (Trả data)
-  |                          |
-  |--- Request ------------->|  (Xin data lại)
-  |<-- Response -------------|  (Trả data lại)
-  |                          |
-  (Mỗi lần phải tạo kết nối mới)
-```
+
+Client Server
+
+| |
+
+|--- Request ------------->| (Requests data)
+
+|<-- Response -------------| (Returns data)
+
+| |
+
+--- Request ------------->| (Requests data again)
+
+|<-- Response -------------| (Returns data)
+
+| |
+
+(A new connection must be established each time)
 
 #### WebSocket (Persistent Connection):
-```
-Client                    Server
-  |                          |
-  |--- Handshake ----------->|  (Xin upgrade lên WebSocket)
-  |<-- Upgrade OK -----------|  (OK, upgrade)
-  |                          |
-  |=== CONNECTED ============|  (Kết nối liên tục)
-  |                          |
-  |--- Message 1 ----------->|
-  |<-- Message 2 ------------|
-  |--- Message 3 ----------->|
-  |<-- Message 4 ------------|
-  |                          |
-  (Kết nối mở suốt, không cần tạo lại)
-```
 
+Client Server
+
+| |
+
+|--- Handshake ----------->| (Requests an upgrade to WebSocket)
+
+|<-- Upgrade OK -----------| (OK, upgrade)
+
+| |
+
+=== CONNECTED ============| (Continuous connection)
+
+| |
+
+|--- Message 1 ----------->|
+
+|<-- Message 2 ------------|
+
+|--- Message 3 ----------->|
+
+|<-- Message 4 ------------|
+
+| |
+
+(Connection remains open, no need to re-establish)
+
+```
 ### WebSocket Handshake:
 
-**Bước 1: Client gửi HTTP request đặc biệt**
+**Step 1: Client sends a special HTTP request**
 ```http
 GET /game HTTP/1.1
 Host: drawguess-game.onrender.com
@@ -160,7 +202,7 @@ Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
 Sec-WebSocket-Version: 13
 ```
 
-**Bước 2: Server trả lời**
+**Step 2: Server responds**
 ```http
 HTTP/1.1 101 Switching Protocols
 Upgrade: websocket
@@ -168,109 +210,120 @@ Connection: Upgrade
 Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
 ```
 
-**Bước 3: Kết nối WebSocket được thiết lập**
+**Step 3: WebSocket connection is established** establish**
 ```
-Client <======= WebSocket Connection =======> Server
-       (Bidirectional, Persistent)
+Client <======= WebSocket Connection =======> Server 
+(Bidirectional, Persistent)
 ```
 
-### Trong Code:
+### In Code:
 
 **Server** (`index.js`):
 ```javascript
 const http = require('http');
 const { Server } = require('socket.io');
 
-const server = http.createServer(app);  // HTTP server
-const io = new Server(server, {         // WebSocket server
-  cors: {
-    origin: allowedOrigins,
-    methods: ["GET", "POST"]
-  }
+const server = http.createServer(app); // HTTP server
+const io = new Server(server, { // WebSocket server 
+cors: { 
+origin: allowedOrigins, 
+methods: ["GET", "POST"] 
+}
 });
 
-// WebSocket sẽ tự động upgrade từ HTTP
+// WebSocket will automatically upgrade from HTTP
 ```
-
 **Client** (`app.js`):
 ```javascript
 const socket = io(serverUrl + '/game', {
-  transports: ['websocket', 'polling']  // Ưu tiên WebSocket
+transports: ['websocket', 'polling'] // Prioritize WebSocket
 });
 
-// Socket.IO tự động:
-// 1. Gửi HTTP request với Upgrade header
-// 2. Nhận 101 Switching Protocols
-// 3. Thiết lập WebSocket connection
+// Socket.IO automatically:
+
+// 1. Send HTTP Request with Upgrade header
+// 2. Get 101 Switching Protocols
+// 3. Establish WebSocket connection
 ```
 
 ---
+## 4. 🚀 What is Socket.IO?
 
-## 4. 🚀 Socket.IO Là Gì?
-
-### Định Nghĩa:
-**Socket.IO** = Thư viện JavaScript **bọc ngoài** WebSocket, cung cấp thêm nhiều tính năng.
+### Definition:
+**Socket.IO** = A JavaScript library **wrapping** around WebSocket, providing additional features.
 
 ### WebSocket vs Socket.IO:
 
-| Tính Năng | WebSocket | Socket.IO |
+| Features | WebSocket | Socket.IO |
+
 |-----------|-----------|-----------|
-| **Giao thức** | Giao thức chuẩn | Thư viện (library) |
-| **Fallback** | ❌ Không | ✅ Polling nếu WebSocket fail |
-| **Auto-reconnect** | ❌ Phải tự code | ✅ Tự động |
-| **Rooms** | ❌ Không có | ✅ Có sẵn |
-| **Namespaces** | ❌ Không có | ✅ Có sẵn |
-| **Events** | ❌ Chỉ có `message` | ✅ Custom events |
-| **Acknowledgements** | ❌ Không có | ✅ Có callback |
 
-### Socket.IO = WebSocket + Nhiều Tính Năng:
+| **Protocol** | Standard Protocol | Library |
+
+| **Fallback** | ❌ No | ✅ Polling if WebSocket fails |
+
+| **Auto-reconnect** | ❌ Must be coded manually | ✅ Automatic |
+
+| **Rooms** | ❌ None | ✅ Available |
+
+| **Namespaces** | ❌ None | ✅ Available |
+
+**Events** | ❌ Message only | ✅ Custom events |
+
+**Acknowledgements** | ❌ None | ✅ Callback available |
+
+### Socket.IO = WebSocket + Many Features:
 
 ```
 ┌─────────────────────────────────────┐
-│         Socket.IO Library           │
-│  - Auto-reconnection                │
-│  - Fallback to polling              │
-│  - Rooms & Namespaces               │
-│  - Custom events                    │
-│  - Acknowledgements                 │
-│  - Broadcasting                     │
-└──────────────┬──────────────────────┘
-               │
-               ▼
+│ Socket.IO Library │
+│ - Auto-reconnection │
+│ - Fallback to polling │
+│ - Rooms & Namespaces │
+│ - Custom events │
+│ - Acknowledgments │
+│ - Broadcasting │
+└───────────────┬──────────────────────┘
+
+│ 
+
+▼
 ┌─────────────────────────────────────┐
-│         WebSocket Protocol          │
-│  - Bidirectional communication      │
-│  - Persistent connection            │
-│  - Low latency                      │
-└──────────────┬──────────────────────┘
-               │
-               ▼
+│ WebSocket Protocol │
+│ - Bidirectional communication │
+│ - Persistent connection │
+│ - Low latency │
+└───────────────┬──────────────────────┘
+
+│ 
+
+▼
 ┌─────────────────────────────────────┐
-│              TCP                    │
-│  - Reliable, ordered delivery       │
-└─────────────────────────────────────┘
+│ TCP │
+│ - Reliable, ordered delivery │
+└──────────────────────────────────────┘
 ```
 
-### Tính Năng Socket.IO Trong Dự Án:
+### Socket.IO Features in the Project:
 
-#### 1. **Namespaces** (Không gian tên)
+#### 1. **Namespaces**
 ```javascript
 // Server
-const gameNamespace = io.of('/game');    // Namespace cho game
-const adminNamespace = io.of('/admin');  // Namespace cho admin
+const gameNamespace = io.of('/game'); // Namespace for the game
+const adminNamespace = io.of('/admin'); // Namespace for the admin
 
 // Client
-const socket = io(serverUrl + '/game');  // Kết nối vào /game
+const socket = io(serverUrl + '/game'); // Connect to /game
 ```
 
-#### 2. **Rooms** (Phòng)
+#### 2. **Rooms** (Rooms)
 ```javascript
 // Server: Join room
-socket.join(roomId);  // Player join vào room
+socket.join(roomId); // Player joins the room
 
 // Broadcast to room
-socket.to(roomId).emit('draw', data);  // Gửi cho room (trừ sender)
-gameNamespace.to(roomId).emit('timer-update', data);  // Gửi cho cả room
+socket.to(roomId).emit('draw', data); // Send to room (except sender)
+gameNamespace.to(roomId).emit('timer-update', data); // Send to the whole room
 ```
 
 #### 3. **Custom Events**
@@ -287,427 +340,488 @@ socket.emit('draw', { x0, y0, x1, y1, color });
 
 #### 4. **Acknowledgements** (Callback)
 ```javascript
-// Client gửi với callback
-socket.emit('lobby:create-room', data, (response) => {
-  if (response.success) {
-    console.log('Room created:', response.roomId);
-  }
+// Client sends with callback
+socket.emit('lobby:create-room', data, (response) => { 
+if (response.success) { 
+console.log('Room created:', response.roomId); 
+}
 });
 
-// Server trả lời qua callback
-socket.on('lobby:create-room', (data, callback) => {
-  const roomId = createRoom(data);
-  callback({ success: true, roomId });  // Gọi callback
+// Server responds via callback
+socket.on('lobby:create-room', (data, callback) => { 
+const roomId = createRoom(data); 
+callback({ success: true, roomId }); // Call callback
 });
 ```
 
 #### 5. **Auto-Reconnection**
 ```javascript
-const socket = io(serverUrl, {
-  reconnectionAttempts: 5,  // Thử reconnect 5 lần
-  timeout: 10000            // Timeout 10s
+const socket = io(serverUrl, { 
+reconnectionAttempts: 5, // Try to reconnect 5 times 
+timeout: 10000 // Timeout 10s
 });
 
-socket.on('reconnect', (attemptNumber) => {
-  console.log('Reconnected after', attemptNumber, 'attempts');
+socket.on('reconnect', (attemptNumber) => { 
+console.log('Reconnected after', attemptNumber, 'attempts');
 });
 ```
 
 ---
 
-## 5. 🔄 Luồng Xử Lý
+## 5. 🔄 Processing Flow
 
-### 5.1. Luồng Kết Nối
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  BƯỚC 1: CLIENT MỞ TRANG WEB                                │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  BƯỚC 2: LOAD HTML, CSS, JS                                 │
-│  - Browser tải index.html                                   │
-│  - Load app.js, config.js                                   │
-│  - Load Socket.IO client library                            │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  BƯỚC 3: KHỞI TẠO SOCKET.IO CLIENT                          │
-│  const socket = io(serverUrl + '/game', {                   │
-│    transports: ['websocket', 'polling']                     │
-│  });                                                         │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  BƯỚC 4: WEBSOCKET HANDSHAKE                                │
-│  Client: GET /game HTTP/1.1                                 │
-│          Upgrade: websocket                                 │
-│  Server: HTTP/1.1 101 Switching Protocols                   │
-│          Upgrade: websocket                                 │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  BƯỚC 5: KẾT NỐI THÀNH CÔNG                                 │
-│  Client: socket.on('connect', () => {                       │
-│    console.log('Connected!', socket.id);                    │
-│  });                                                         │
-│                                                              │
-│  Server: gameNamespace.on('connection', (socket) => {       │
-│    console.log('New connection:', socket.id);               │
-│  });                                                         │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 5.2. Luồng Tạo Room
+### 5.1. Connection Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  CLIENT                                                     │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               │ 1. User nhập tên, room ID, password
-               │ 2. Click "Create Room"
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  socket.emit('lobby:create-room', {                         │
-│    playerName: 'Amin',                                      │
-│    roomId: '123',                                           │
-│    password: 'abc'                                          │
-│  }, (response) => {                                         │
-│    // Callback nhận response                                │
-│  });                                                         │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               │ Event qua WebSocket
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  SERVER (mainHandler.js)                                    │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  socket.on('lobby:create-room', (data, callback) => {       │
-│    // 1. Validate data                                      │
-│    if (!data.playerName) {                                  │
-│      return callback({ success: false, message: 'Error' }); │
-│    }                                                         │
-│                                                              │
-│    // 2. Tạo room mới                                       │
-│    const newRoom = new GameRoom(roomId, broadcast, {...});  │
-│    rooms.set(roomId, newRoom);                              │
-│                                                              │
-│    // 3. Broadcast room list update                         │
-│    broadcastRoomListUpdate();                               │
-│                                                              │
-│    // 4. Gọi callback                                       │
-│    callback({ success: true, roomId });                     │
-│  });                                                         │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               │ Response qua WebSocket
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  CLIENT                                                     │
-│  (response) => {                                            │
-│    if (response.success) {                                  │
-│      window.location.href = `game?room=${response.roomId}`; │
-│    }                                                         │
-│  }                                                           │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│ STEP 1: CLIENT OPENS WEBSITE │
+└───────────────┬──────────────────────────────────────────────────┘
+
+│ 
+
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ STEP 2: LOAD HTML, CSS, JS │
+│ - Browser downloads index.html │
+│ - Load app.js, config.js │
+│ - Load Socket.IO client library │
+└──────────────┬─────────────── ───────────────────────────────┘ 
+│
+▼
+┌─────────────────────────────────────────────────────────────────────┐
+│ STEP 3: INITIATE SOCKET.IO CLIENT │
+│ const socket = io(serverUrl + '/game', { │
+│ transports: ['websocket', 'polling'] │
+│ }); │
+└──────────────┬─────────────── ───────────────────────────────┘ 
+│ 
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ STEP 4: WEBSOCKET HANDSHAKE │
+│ Client: GET /game HTTP/1.1 │
+│ Upgrade: websockets │
+│ Server: HTTP/1.1 101 Switching Protocols │
+│ Upgrade: websocket │
+└──────────────┬─────────────── ───────────────────────────────┘ 
+│
+▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ STEP 5: CONNECTION SUCCESSFUL │
+│ Client: socket.on('connect', () => { │
+│ console.log('Connected!', socket.id);│
+│ }); │
+│ │
+│ Server: gameNamespace.on('connection', (socket) => { │
+│ console.log('New connection:', socket.id); │
+│ }); │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 5.3. Luồng Vẽ (Drawing)
+### 5.2. Room Creation Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  PLAYER 1 (Drawer)                                          │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               │ 1. User vẽ trên canvas
-               │ 2. Mouse move event
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  function draw(e) {                                         │
-│    // Vẽ local                                              │
-│    drawLocal(x0, y0, x1, y1, color, size);                  │
-│                                                              │
-│    // Gửi lên server                                        │
-│    socket.emit('draw', {                                    │
-│      x0, y0, x1, y1, color, size, tool                      │
-│    });                                                       │
-│  }                                                           │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               │ Event qua WebSocket
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  SERVER                                                     │
-│  socket.on('draw', (data) => {                              │
-│    const player = players.get(socket.id);                   │
-│                                                              │
-│    // Broadcast to room (trừ sender)                        │
-│    socket.to(player.roomId).emit('draw', data);             │
-│  });                                                         │
-└──────────────┬──────────────────────────────────────────────┘
-               │
-               │ Broadcast qua WebSocket
-               │
-               ▼
-┌─────────────────────────────────────────────────────────────┐
-│  PLAYER 2, 3, 4... (Guessers)                               │
-│  socket.on('draw', (data) => {                              │
-│    if (!isDrawer) {                                         │
-│      drawRemote(data);  // Vẽ lên canvas                    │
-│    }                                                         │
-│  });                                                         │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│ CLIENT │
+└──────────────┬─────────────── ───────────────────────────────┘ 
+│ 
+│ 1. User enters name, room ID, password 
+│ 2. Click "Create Room" 
+│ 
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ socket.emit('lobby:create-room', { │
+│ playerName: 'Amin', │
+│ roomId: '123', │
+│ password: 'abc' │
+│ }, (response) => { │
+│ // Callback receives response │
+│ }); │
+└──────────────┬─────────────── ───────────────────────────────┘ 
+│ 
+│ Event via WebSocket 
+│ 
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ SERVER (mainHandler.js) │
+└───────────────┬──────────────────────────────────────────────────┘
+
+│ 
+
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ socket.on('lobby:create-room', (data, callback) => { │
+│ // 1. Validate data │
+│ if (!data.playerName) { │
+│ return callback({ success: false, message: 'Error' }); │
+│ } │
+│ │
+│ // 2. Create a new room │
+│ const newRoom = new GameRoom(roomId, broadcast, {...}); │
+│ rooms.set(roomId, newRoom); │
+│ │
+│ // 3. Broadcast room list update │
+│ broadcastRoomListUpdate(); │
+│ │
+│ // 4. Call callback │
+│ callback({ success: true, roomId }); │
+│ }); │
+└──────────────┬─────────────── ───────────────────────────────┘ 
+│ 
+│ Response via WebSocket 
+│ 
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ CLIENT │
+│ (response) => { │
+│ if (response.success) { │
+│ window.location.href = `game?room=${response.roomId}`; │
+│ } │
+│ } │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 5.3. Drawing Flow
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│ PLAYER 1 (Drawer) │
+└───────────────┬───────────────────────────────────────────────────┘
+│
+
+│ 1. User draws on the canvas
+
+│ 2. Mouse move event
+
+│ 
+
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ function draw(e) { │
+│ // Draw locally │
+│ drawLocal(x0, y0, x1, y1, color, size); │
+│ │
+│ // Send to server │
+│ socket.emit('draw', { │
+│ x0, y0, x1, y1, color, size, tool │
+│ }); │
+│ } │
+└──────────────┬─────────────── ───────────────────────────────┘ 
+│ 
+│ Event via WebSocket 
+│ 
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ SERVER │
+│ socket.on('draw', (data) => { │
+│ const player = players.get(socket.id); │
+│ │
+│ // Broadcast to room (except sender) │
+│ socket.to(player.roomId).emit('draw', data); │
+│ }); │
+└──────────────┬─────────────── ───────────────────────────────┘ 
+│ 
+│ Broadcast via WebSocket 
+│ 
+▼
+┌────────────────────────────── ───────────────────────────────┐
+│ PLAYER 2, 3, 4... (Guessers) │
+│ socket.on('draw', (data) => { │
+│ if (!isDrawer) { │
+│ drawRemote(data); // Draw on canvas │
+│ } │
+│ }); │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 5.4. Node.js Event Loop
 
-Node.js xử lý **bất đồng bộ** (asynchronous) bằng **Event Loop**:
+Node.js handles **asynchronous** operations using the **Event Loop**:
 
 ```
+┌────────────────────────────┐
+│ Event Queue │
+│ - socket.on('draw') │
+│ - socket.on('chat') │
+
+│ - setTimeout callback │
+
+│ - ... │
+└──────────┬────────────────┘ 
+│ 
+▼
 ┌───────────────────────────┐
-│      Event Queue          │
-│  - socket.on('draw')      │
-│  - socket.on('chat')      │
-│  - setTimeout callback    │
-│  - ...                    │
+│ Event Loop │
+│ while (true) { │
+│ event = queue.pop(); │
+│ event.execute(); │
+│ } │
 └──────────┬────────────────┘
-           │
-           ▼
-┌───────────────────────────┐
-│      Event Loop           │
-│  while (true) {           │
-│    event = queue.pop();   │
-│    event.execute();       │
-│  }                        │
-└──────────┬────────────────┘
-           │
-           ▼
-┌───────────────────────────┐
-│   Execute Callback        │
-│   - Xử lý logic           │
-│   - Gọi database          │
-│   - Emit events           │
+
+│
+
+▼
+┌────────────────────────────┐
+│ Execute Callback │
+│ - Logic Processing │
+
+│ - Database Call │
+
+│ - Emit events │
 └───────────────────────────┘
 ```
 
-**Ví dụ**:
+**Example**:
 ```javascript
-// Event 1: Player A vẽ
+// Event 1: Player A draws
 socket.on('draw', (data) => {
-  // Xử lý ngay, không block
-  socket.to(roomId).emit('draw', data);
+
+// Process immediately, do not block
+socket.to(roomId).emit('draw', data);
+
 });
 
-// Event 2: Player B chat (xảy ra đồng thời)
+// Event 2: Player B chats (occurs simultaneously)
 socket.on('chat-message', (data) => {
-  // Xử lý ngay, không đợi Event 1
-  gameNamespace.to(roomId).emit('chat-message', data);
+
+// Process immediately, do not wait for Event 1
+gameNamespace.to(roomId).emit('chat-message', data);
+
 });
 
-// Cả 2 events xử lý song song (concurrent)
-// Không cần multithread!
+// Both events are processed in parallel (concurrent)
+
+// No multithreading needed!
+
 ```
 
 ---
-
 ## 6. 🔀 Multicast & Multithreading
 
-### 6.1. Multicast Trong Dự Án
+### 6.1. Multicast in a Project
 
-**Multicast** = Gửi message cho **nhiều clients cùng lúc**.
+**Multicast** = Sending messages to **multiple clients at the same time**.
 
-#### Các Loại Broadcasting:
+#### Types of Broadcasting:
 
 **1. Unicast** (1-to-1):
 ```javascript
-// Gửi cho 1 client cụ thể
+
+// Send to a specific client
 socket.emit('word-selected', { word: 'cat' });
+
 ```
 
-**2. Broadcast** (1-to-many, trừ sender):
+**2. Broadcast** (1-to-many, except sender):
 ```javascript
-// Gửi cho tất cả trong room, trừ sender
+
+// Send to everyone in the room, except the sender
 socket.to(roomId).emit('draw', data);
+
 ```
 
-**3. Multicast** (1-to-many, bao gồm sender):
+**3. Multicast** (1-to-many, including sender):
 ```javascript
-// Gửi cho tất cả trong room, kể cả sender
+// Send to everyone in the room, including the sender
 gameNamespace.to(roomId).emit('timer-update', { timeLeft: 60 });
+
 ```
 
 **4. Broadcast All** (1-to-all):
+
 ```javascript
-// Gửi cho tất cả clients trong namespace
+// Send to all clients in the namespace
 gameNamespace.emit('room-list-update', rooms);
+
 ```
 
-#### Trong Code:
+#### In Code:
 
 ```javascript
-// Ví dụ: Timer update
-function startTimer(onTimerEnd) {
-  this.timer = setInterval(() => {
-    this.timeLeft--;
-    
-    // MULTICAST: Gửi cho tất cả players trong room
-    this.broadcast('timer-update', { timeLeft: this.timeLeft });
-    //           ↓
-    //    gameNamespace.to(roomId).emit(...)
-    //           ↓
-    //    ┌─────────┬─────────┬─────────┐
-    //    Player 1  Player 2  Player 3  Player 4
-    //    (Tất cả đều nhận cùng lúc)
-  }, 1000);
+// Example: Timer update
+function startTimer(onTimerEnd) { 
+this.timer = setInterval(() => { 
+this.timeLeft--; 
+
+// MULTICAST: Send to all players in the room 
+this.broadcast('timer-update', { timeLeft: this.timeLeft }); 
+// ↓ 
+// gameNamespace.to(roomId).emit(...) 
+// ↓ 
+// ┌─────────┬─────────┬─────────┐ 
+// Player 1 Player 2 Player 3 Player 4
+
+// (All receive at the same time)
+
+}, 1000);
+
 }
 ```
 
 ### 6.2. Multithreading
 
-**Câu hỏi**: Dự án có dùng multithread không?
+**Question**: Does the project use multithreading?
 
-**Trả lời**: **KHÔNG** - Node.js là **single-threaded**!
+**Answer**: **NO** - Node.js is **single-threaded**!
 
 #### Node.js Single-Threaded Model:
 
 ```
-┌─────────────────────────────────────┐
-│     Main Thread (JavaScript)        │
-│  - Xử lý tất cả logic               │
-│  - Event loop                       │
-│  - Không block                      │
-└──────────────┬──────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────┐
-│     Thread Pool (C++)               │
-│  - File I/O                         │
-│  - Network I/O                      │
-│  - Crypto operations                │
-│  (Tự động, không cần code)          │
+┌──────────────────────────────────────┐
+│ Main Thread (JavaScript) │
+
+│ - Handles all logic │
+
+│ - Event loop │
+
+│ - No blocking │
+└───────────────┬──────────────────────┘
+
+│
+
+▼
+┌──────────────────────────────────────┐
+│ Thread Pool (C++) │
+│ - File I/O │
+│ - Network I/O │
+│ - Crypto operations │
+│ (Automatic, no coding required) │
 └─────────────────────────────────────┘
 ```
 
-#### Tại Sao Không Cần Multithread?
+#### Why Multithreading Is Not Necessary?
 
 **1. Event-Driven Architecture**:
 ```javascript
-// Không block, xử lý bất đồng bộ
+
+// No blocking, asynchronous processing
 socket.on('draw', (data) => {
-  // Xử lý nhanh, không đợi
-  socket.to(roomId).emit('draw', data);
+
+// Fast processing, no waiting
+socket.to(roomId).emit('draw', data);
+
 });
 
-// Nhiều events xử lý đồng thời (concurrent)
-// Nhưng chỉ 1 thread!
-```
+// Multiple events processed concurrently
 
+// But only 1 thread!
+
+```
 **2. Non-Blocking I/O**:
 ```javascript
-// Không block thread chính
+// Does not block the main thread
 setTimeout(() => {
-  startNewRound(room);
-}, 5000);  // Đợi 5s, nhưng không block
+startNewRound(room);
 
-// Trong lúc đợi, vẫn xử lý events khác
+}, 5000); // Waits 5 seconds, but does not block
+
+// While waiting, it still processes other events
 ```
 
 **3. Scalability**:
 ```
-1 Node.js process = Xử lý được 1000+ connections
-Lý do: Event loop + Non-blocking I/O
+1 Node.js process = Handles 1000+ connections
+Reason: Event loop + Non-blocking I/O
 ```
 
-#### So Sánh:
+#### Comparison:
 
 | | Multithreading | Node.js Event Loop |
+
 |---|---|---|
-| **Threads** | Nhiều threads | 1 thread chính |
-| **Complexity** | Phức tạp (race conditions) | Đơn giản |
-| **Memory** | Nhiều (mỗi thread = 1-2MB) | Ít |
-| **Context Switching** | Chậm | Nhanh |
-| **Scalability** | Giới hạn bởi threads | Giới hạn bởi memory |
 
-#### Khi Nào Cần Multithread?
+| **Threads** | Multiple threads | 1 main thread |
 
-**Cần**:
+| **Complexity** | Complex (race conditions) | Simple |
+
+| **Memory** | Many (each thread = 1-2MB) | Few |
+
+| **Context Switching** | Slow | Fast |
+
+| **Scalability** | Limited by threads | Limited by memory |
+
+#### When is Multithreading Needed?
+
+**Needed**:
+
 - CPU-intensive tasks (image processing, video encoding)
+
 - Heavy computation
 
-**Không cần** (như dự án này):
+**Not needed** (like this project):
+
 - I/O-intensive (network, database)
 - Real-time communication
 - Event-driven applications
 
 ---
 
-## 📊 Tổng Kết
+## 📊 Summary
 
-### Stack Công Nghệ:
+### Technology Stack:
 
 ```
 ┌─────────────────────────────────────┐
-│  Application Layer                  │
-│  - Socket.IO (Custom events)        │
-│  - Namespaces, Rooms                │
-└──────────────┬──────────────────────┘
-               │
-               ▼
+│ Application Layer │
+│ - Socket.IO (Custom events) │
+│ - Namespaces, Rooms │
+└───────────────┬──────────────────────┘
+
+│ 
+
+▼
 ┌─────────────────────────────────────┐
-│  WebSocket Protocol                 │
-│  - Bidirectional                    │
-│  - Persistent connection            │
-└──────────────┬──────────────────────┘
-               │
-               ▼
+│ WebSocket Protocol │
+│ - Bidirectional │
+│ - Persistent connection │
+└───────────────┬──────────────────────┘
+
+│ 
+
+▼
 ┌─────────────────────────────────────┐
-│  TCP Protocol                       │
-│  - Reliable, ordered                │
-└──────────────┬──────────────────────┘
-               │
-               ▼
+│ TCP Protocol │
+│ - Reliable, ordered │
+└───────────────┬──────────────────────┘
+
+│ 
+
+▼
 ┌─────────────────────────────────────┐
-│  IP Protocol                        │
-│  - Routing, addressing              │
-└─────────────────────────────────────┘
+│ IP Protocol │
+│ - Routing, addressing │
+└──────────────────────────────────────┘
 ```
 
-### Câu Trả Lời Ngắn Gọn:
+### Short Answers:
 
-1. **Socket là gì?** 
-   - Điểm cuối của kết nối mạng
+1. **What is a Socket?**
 
-2. **TCP hay UDP?** 
-   - **TCP** (qua WebSocket)
+- The endpoint of a network connection
 
-3. **WebSocket là gì?** 
-   - Giao thức giao tiếp 2 chiều, persistent connection
+2. **TCP or UDP?**
 
-4. **Socket.IO là gì?** 
-   - Thư viện bọc WebSocket, thêm nhiều tính năng
+- **TCP** (via WebSocket)
 
-5. **Luồng xử lý?** 
-   - Event-driven, non-blocking, single-threaded
+3. **What is a WebSocket?**
 
-6. **Multicast?** 
-   - **Có** - Broadcasting to rooms
+- A bidirectional, persistent connection protocol
 
-7. **Multithreading?** 
-   - **Không** - Node.js single-threaded, dùng Event Loop
+4. **What is Socket.IO?**
+
+- A library wrapping WebSockets, adding many features
+
+5. **Processing Flow?**
+
+- Event-driven, non-blocking, single-threaded
+
+6. **Multicast?**
+
+- **Yes** - Broadcasting to rooms
+
+7. **Multithreading?**
+
+- **No** - Node.js single-threaded, using the Event Loop
 
 ---
 
-**File này giải thích đầy đủ! Đọc kỹ để hiểu rõ! 📚**
+**This file explains everything! Read carefully to understand! 📚**
