@@ -1,17 +1,18 @@
-# 📊 Hiệu Suất Mạng - DrawGuess
+# 📊 Network Performance - DrawGuess
 
-## ✅ Câu Trả Lời: Game Xử Lý TỐT Cả LAN & Internet!
+## ✅ Answer: The game handles both LAN and Internet well!
 
 ---
 
 ## 🏠 LAN (Local Network)
 
-### Hiệu Suất:
+### Performance:
 - **Latency**: <10ms ⭐⭐⭐⭐⭐
-- **Bandwidth**: 100Mbps - 1Gbps (dư thừa)
-- **Trải nghiệm**: Xuất sắc, không lag
+- **Bandwidth**: 100Mbps - 1Gbps (more than enough)
 
-### Cách Dùng:
+- **Experience**: Excellent, no lag
+
+### How to Use:
 ```bash
 # Server
 npm start
@@ -20,63 +21,74 @@ npm start
 http://192.168.1.100:3000
 ```
 
-### Ưu Điểm:
-- ✅ Cực nhanh (<10ms)
-- ✅ Không cần Internet
-- ✅ Miễn phí
-- ✅ Bảo mật (nội bộ)
+### Advantages:
+
+- ✅ Extremely fast (<10ms)
+
+- ✅ No internet required
+- ✅ Free
+- ✅ Secure (internal)
 
 ---
-
 ## 🌍 Internet (WAN)
 
-### Hiệu Suất:
-- **Latency**: 50-200ms ⭐⭐⭐⭐
-- **Bandwidth**: 0.1 Mbps (rất thấp)
-- **Trải nghiệm**: Tốt, chơi được bình thường
+### Performance:
 
-### Cách Dùng:
+- **Latency**: 50-200ms ⭐⭐⭐⭐
+- **Bandwidth**: 0.1 Mbps (very low)
+
+- **Experience**: Good, plays normally
+
+### How to Use:
+
 ```
 https://drawguess-game.onrender.com
+
 ```
 
-### Ưu Điểm:
-- ✅ Chơi từ xa
-- ✅ Không cần setup
-- ✅ HTTPS bảo mật
-- ✅ Miễn phí (Render)
+### Advantages:
+
+- ✅ Remote play
+- ✅ No setup required
+- ✅ Secure HTTPS
+
+- ✅ Free (Render)
 
 ---
 
-## 📊 So Sánh
+## 📊 Comparison
 
-| Môi Trường | Latency | Bandwidth | Điểm |
+| Environment | Latency | Bandwidth | Score |
+
 |------------|---------|-----------|------|
+
 | **Localhost** | <1ms | ∞ | 10/10 |
+
 | **LAN WiFi** | 2-10ms | 100Mbps | 10/10 |
+
 | **Internet (VN)** | 50-100ms | 10Mbps | 9/10 |
-| **Internet (Quốc tế)** | 100-200ms | 5Mbps | 8/10 |
+
+| **Internet (International)** | 100-200ms | 5Mbps | 8/10 |
 
 ---
 
-## 🎯 Tại Sao Hoạt Động Tốt?
+## 🎯 Why Does It Work Well?
 
 ### 1. WebSocket
-- Persistent connection
+- ​​Persistent connection
 - Low latency
 - Bidirectional
 
 ### 2. Efficient Data
 ```javascript
-// Chỉ gửi tọa độ (~100 bytes)
+// Only sends coordinates (~100 bytes)
 socket.emit('draw', { x0, y0, x1, y1, color, size });
 
-// KHÔNG gửi image (tiết kiệm bandwidth)
-```
+// DO NOT send images (save bandwidth)
 
 ### 3. TCP Protocol
-- Reliable (không mất data)
-- Ordered (đúng thứ tự)
+- Reliable (no data loss)
+- Ordered (correct order)
 - Auto-retry
 
 ### 4. Socket.IO Features
@@ -86,72 +98,77 @@ socket.emit('draw', { x0, y0, x1, y1, color, size });
 
 ---
 
-## 🧪 Test Thực Tế
+## 🧪 Real-world Tests
 
 ### LAN Test:
-```
-✅ 4 players cùng WiFi
+
+✅ 4 players on the same WiFi
 ✅ Latency: 2-5ms
 ✅ Drawing sync: Instant
 ✅ No lag
-```
 
 ### Internet Test:
-```
-✅ Players từ HN, HCM, DN
+
+✅ Players from Hanoi, Ho Chi Minh City, Da Nang
 ✅ Latency: 50-150ms
 ✅ Drawing sync: Smooth
 ✅ Playable
-```
+
+---
+## 💡 Recommendations
+
+### Use LAN When:
+
+- ✅ You live in the same house/office/school
+- ✅ You want low latency Lowest
+- ✅ No Internet
+
+### Use Internet When:
+
+- ✅ Playing remotely
+- ✅ Different city/country
+- ✅ Want to easily share links
 
 ---
 
-## 💡 Khuyến Nghị
-
-### Dùng LAN Khi:
-- ✅ Cùng nhà/văn phòng/trường
-- ✅ Muốn latency thấp nhất
-- ✅ Không có Internet
-
-### Dùng Internet Khi:
-- ✅ Chơi từ xa
-- ✅ Khác thành phố/quốc gia
-- ✅ Muốn share link dễ dàng
-
----
-
-## 📱 Hỗ Trợ Thiết Bị
+## 📱 Device Support
 
 - ✅ Desktop (Windows, Mac, Linux)
+
 - ✅ Mobile (Android, iOS)
+
 - ✅ Tablet (iPad, Android)
 
 ---
 
-## 🔒 Bảo Mật
+## 🔒 Security
 
 ### LAN:
-- Nội bộ, không ra Internet
-- Password cho room
+
+- Local, not connected to the Internet
+- Password for the room
 
 ### Internet:
+
 - HTTPS (SSL encryption)
+
 - CORS protection
+
 - Rate limiting
 
 ---
-
 ## 📈 Bandwidth Requirements
 
 ```
 Drawing: 0.08 Mbps
+
 Chat: 0.001 Mbps
-Updates: 0.004 Mbps
+Updates: 0.004 Mbps Mbps
 ─────────────────────
 Total: ~0.1 Mbps
 ```
 
-**Kết luận**: Chạy được trên cả 3G! 🎉
+**Conclusion**: Works on 3G! 🎉
 
 ---
 
@@ -170,5 +187,4 @@ npm start
 ```
 
 ---
-
-**Chi tiết đầy đủ**: Xem file `LAN_INTERNET_SUPPORT.md`
+**Full details**: See file `LAN_INTERNET_SUPPORT.md`
