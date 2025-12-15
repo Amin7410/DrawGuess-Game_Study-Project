@@ -663,14 +663,23 @@ socket.on('chat-message', handleChatMessage);
 | 2 | HTTP/HTTPS Protocol | ⭐⭐⭐ | Express routes |
 
 | 3 | WebSocket Protocol | ⭐⭐⭐ | Socket.IO |
+
 | 4 | TCP/IP | ⭐⭐ | Underlying WebSocket |
+
 | 5 | Event-Driven Architecture | ⭐⭐⭐ | Socket events |
+
 | 6 | Namespaces | ⭐⭐ | `/game`, `/admin` |
+
 | 7 | Rooms | ⭐⭐⭐ | Game rooms |
+
 | 8 | Broadcasting | ⭐⭐⭐ | `socket.to()`, `emit()` |
+
 | 9 | CORS | ⭐⭐ | CORS config |
+
 | 10 | State Management | ⭐⭐⭐ | `rooms`, `players` Map |
+
 | 11 | Real-time Sync | ⭐⭐⭐ | Drawing, chat, timer |
+
 | 12 | Connection Management | ⭐⭐ | Reconnect, disconnect |
 
 | 13 | Security | ⭐⭐ | Rate limiting, validation |
