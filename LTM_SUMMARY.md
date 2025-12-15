@@ -108,13 +108,21 @@
 | **WebSocket** | ⭐⭐⭐ | Socket.IO |
 
 | **Event-Driven** | ⭐⭐⭐ | Socket events |
+
 | **Namespaces** | ⭐⭐ | `/game`, `/admin` |
+
 | **Rooms** | ⭐⭐⭐ | Game rooms |
+
 | **Broadcasting** | ⭐⭐⭐ | `emit()`, `to()` |
+
 | **CORS** | ⭐⭐ | CORS config |
+
 | **State Management** | ⭐⭐⭐ | `GameRoom.js` |
+
 | **Real-time Sync** | ⭐⭐⭐ | Draw, chat, timer |
+
 | **Security** | ⭐⭐ | Rate limit, validation |
+
 | **Connection Mgmt** | ⭐⭐ | Reconnect, disconnect |
 
 ---
