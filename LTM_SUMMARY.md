@@ -1,103 +1,112 @@
-# 📚 Tóm Tắt: Khái Niệm LTM Trong DrawGuess
+# 📚 Summary: The LTM Concept in DrawGuess
 
-## 🎯 Dự Án Sử Dụng Gì?
+## 🎯 What Projects Will Use This?
 
-### 1. **Mô Hình Client-Server** ⭐⭐⭐
-- Server trung tâm quản lý game logic
-- Nhiều clients (browsers) kết nối đồng thời
-- **File**: `drawguess-server/index.js`, `drawguess-webapp/public/app.js`
+### 1. **Client-Server Model** ⭐⭐⭐
+- Central server manages game logic
+- Multiple clients (browsers) connect simultaneously
+- **Files**: `drawguess-server/index.js`, `drawguess-webapp/public/app.js`
 
-### 2. **Giao Thức HTTP/HTTPS** ⭐⭐⭐
-- Phục vụ static files (HTML, CSS, JS)
+### 2. **HTTP/HTTPS Protocol** ⭐⭐⭐
+- Serves static files (HTML, CSS, JS)
+
 - REST API endpoints (`/api`, `/health`)
+
 - **File**: `drawguess-server/index.js` (Express routes)
 
-### 3. **Giao Thức WebSocket** ⭐⭐⭐
+### 3. **WebSocket Protocol** ⭐⭐⭐
 - Real-time bidirectional communication
-- Persistent connection (kết nối liên tục)
+- Persistent connection
 - Low latency (<100ms)
 - **File**: Socket.IO implementation
 
 ### 4. **Socket.IO Protocol** ⭐⭐⭐
-- Abstraction layer trên WebSocket
-- Auto-reconnection
+- Abstraction layer on top of WebSocket
+- ​​Auto-reconnection
 - Fallback to polling
-- **File**: Toàn bộ socket events
+- **File**: All socket events
 
 ### 5. **Namespaces** ⭐⭐
-- `/game` - Cho gameplay
-- `/admin` - Cho admin panel
-- Tách biệt logic và bảo mật
-- **File**: `drawguess-server/index.js` (dòng 60-61)
+- `/game` - For gameplay
+- `/admin` - For admin panel
+- Separate logic and security
+- **File**: `drawguess-server/index.js` (lines 60-61)
 
-### 6. **Rooms (Phòng)** ⭐⭐⭐
-- Nhóm players thành rooms
-- Broadcast messages trong room
-- Mỗi room = 1 game session
+### 6. **Rooms** ⭐⭐⭐
+- Group players into rooms
+- Broadcast messages in rooms
+- Each room = 1 game session
 - **File**: `drawguess-server/sockets/mainHandler.js`
 
 ### 7. **Event-Driven Architecture** ⭐⭐⭐
-- Giao tiếp dựa trên events
-- 20+ events khác nhau
+- Event-based communication
+- 20+ different events
 - Non-blocking I/O
-- **File**: Tất cả socket handlers
+- File: All socket handlers
 
-### 8. **CORS (Cross-Origin Resource Sharing)** ⭐⭐
-- Cho phép frontend gọi backend từ domain khác
-- Bảo mật: Chỉ cho phép origins tin cậy
-- **File**: `drawguess-server/index.js` (dòng 13-21)
+### 8. CORS (Cross-Origin Resource Sharing) ⭐⭐
+- Allows frontend to call backend from other domains
+- Security: Only allows trusted origins
+- File: `drawguess-server/index.js` (lines 13-21)
 
-### 9. **State Management** ⭐⭐⭐
-- Server lưu global state (rooms, players)
-- Đồng bộ state giữa clients
-- **File**: `drawguess-server/game/GameRoom.js`
+### 9. State Management ⭐⭐⭐
+- Server stores global state (rooms, players)
 
-### 10. **Real-Time Synchronization** ⭐⭐⭐
-- Drawing sync (vẽ đồng bộ)
+- Synchronizes state between clients
+- File: `drawguess-server/game/GameRoom.js`
+
+### 10. Real-Time Synchronization ⭐⭐⭐
+- Drawing sync
 - Chat sync
 - Timer sync
 - Player state sync
-- **File**: Drawing events, chat events
+- File: Drawing events, chat events
 
-### 11. **Security** ⭐⭐
-- **Rate Limiting**: Chống spam events
-- **Input Validation**: Validate player data, room codes
-- **Sanitization**: Làm sạch chat messages
-- **File**: `mainHandler.js` (middleware, validation)
+### 11. Security ⭐⭐
+- **Rate Limiting**: Prevents spam events
+- **Input Validation**: Validates player data and room codes
+- **Sanitization**: Cleans chat messages
+- **Files**: `mainHandler.js` (middleware, validation)
 
 ### 12. **Connection Management** ⭐⭐
 - Auto-reconnection (5 attempts)
 - Disconnect handling
 - Cleanup resources
-- **File**: Socket.IO config, disconnect handler
+- **Files**: Socket.IO config, disconnect handler
 
 ### 13. **Network Topology: Star** ⭐⭐
-- Server là trung tâm
-- Clients không giao tiếp trực tiếp
-- Mọi message qua server
-- **Lý do**: Dễ quản lý, bảo mật tốt
+- Server is the central hub
+- Clients do not communicate directly
+- All messages go through the server
+- **Reason**: Easy to manage, good security
 
 ### 14. **Broadcasting** ⭐⭐⭐
-- `socket.emit()` - Gửi cho 1 client
-- `socket.to(room).emit()` - Gửi cho room (trừ sender)
-- `namespace.to(room).emit()` - Gửi cho cả room
-- **File**: Khắp nơi trong socket handlers
+- `socket.emit()` - Sends to a client
+- `socket.to(room).emit()` - Sends For rooms (except sender)
+- `namespace.to(room).emit()` - Sends to the entire room
+- **File**: Throughout socket handlers
 
 ### 15. **Performance Optimization** ⭐⭐
 - Throttling draw events
-- Efficient broadcasting (chỉ gửi cho room cần thiết)
-- State cleanup (xóa room empty)
+- Efficient broadcasting (only sends to necessary rooms)
+- State cleanup (removes empty rooms)
+
 - **File**: Draw handler, disconnect handler
 
 ---
 
-## 📊 Bảng Tổng Hợp
+## 📊 Summary Table
 
-| Khái Niệm | Quan Trọng | Vị Trí Trong Code |
+| Concepts | Important | Position in Code |
+
 |-----------|------------|-------------------|
+
 | **Client-Server** | ⭐⭐⭐ | `index.js`, `app.js` |
+
 | **HTTP/HTTPS** | ⭐⭐⭐ | Express routes |
+
 | **WebSocket** | ⭐⭐⭐ | Socket.IO |
+
 | **Event-Driven** | ⭐⭐⭐ | Socket events |
 | **Namespaces** | ⭐⭐ | `/game`, `/admin` |
 | **Rooms** | ⭐⭐⭐ | Game rooms |
@@ -110,25 +119,27 @@
 
 ---
 
-## 🎓 Cho Báo Cáo Môn Học
+## 🎓 For the Course Report
 
-### Điểm Nổi Bật:
+### Highlights:
 
-1. **Đầy đủ khái niệm**: 15+ khái niệm LTM quan trọng
-2. **Thực tế**: Ứng dụng thực tế, không chỉ lý thuyết
-3. **Production**: Deploy được lên cloud (Render)
-4. **Modern**: Công nghệ hiện đại (Socket.IO, WebSocket)
-5. **Scalable**: Hỗ trợ nhiều rooms, nhiều players
+1. **Complete Concepts**: 15+ important LTM concepts
+2. **Practical**: Real-world applications, not just theory
+3. **Production**: Cloud-based deployment (Rendering)
+4. **Modern**: Advanced technology (Socket.IO, WebSocket)
+5. **Scalable**: Supports multiple rooms and multiple players
 6. **Secure**: Validation, rate limiting, CORS
 
-### Các Events Chính:
+### Main Events:
 
 **Lobby**:
+
 - `get-room-list`, `lobby:quick-play`, `lobby:create-room`
 
 **Game**:
+
 - `join-game`, `game-state`, `player-joined`, `player-left`
-- `choose-word`, `word-selected`, `word-hint`
+- `choose-word`, `word-selected` `word-hint`
 - `next-round`, `timer-update`, `round-end`, `game-over`
 
 **Drawing**:
@@ -137,25 +148,25 @@
 **Chat**:
 - `chat-message`, `correct-answer`
 
-### Kiến Trúc:
+### Architecture:
 
 ```
-Browser (Client)
-    ↓ HTTPS + WebSocket
-Render Server
-    ├─ Express (HTTP/HTTPS)
-    ├─ Socket.IO Server
-    │   ├─ /game namespace
-    │   └─ /admin namespace
-    └─ GameRoom (State Management)
+Browser (Client) 
+↓ HTTPS + WebSocket
+Render Server 
+├─ Express (HTTP/HTTPS) 
+├─ Socket.IO Server 
+│ ├─ /game namespace 
+│ └─ /admin namespace 
+└─ GameRoom (State Management)
 ```
 
 ---
 
-## 📖 Đọc Thêm
+## 📖 Read More
 
-Chi tiết đầy đủ: **`LTM_CONCEPTS.md`**
+Full details: **`LTM_CONCEPTS.md`**
 
 ---
 
-**Dự án này hoàn toàn phù hợp và xuất sắc cho môn Lập Trình Mạng! 🎉**
+**This project Perfectly suited and excellent for Network Programming! 🎉**
