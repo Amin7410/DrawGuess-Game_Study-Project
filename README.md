@@ -2,11 +2,11 @@
 
 A real-time multiplayer game where players take turns drawing and guessing words. Built with Socket.IO, Express, and vanilla JavaScript.
 
-## 🚀 MUỐN DEPLOY NGAY?
+## 🚀 WANT TO DEPLOY NOW?
 
-**Đọc file này**: [`START_HERE.md`](./START_HERE.md)
+**Read this file**: [`START_HERE.md`](./START_HERE.md)
 
-Hoặc chạy:
+Or run:
 ```powershell
 .\deploy-now.ps1
 ```
@@ -15,38 +15,43 @@ Hoặc chạy:
 
 ---
 
-## 🎓 Cho Môn Lập Trình Mạng
+## 🎓 For Network Programming Course
 
-**Dự án này sử dụng 15+ khái niệm LTM quan trọng**:
+**This project uses 15+ important LTM concepts**:
+
 - ✅ Client-Server Model
 - ✅ HTTP/HTTPS & WebSocket
-- ✅ Socket.IO (Namespaces, Rooms, Events)
+- ​​✅ Socket.IO (Namespaces, Rooms, Events)
+
 - ✅ Real-time Synchronization
 - ✅ State Management
 - ✅ CORS, Security, Performance
 
-**Đọc chi tiết**: 
-- [`LTM_SUMMARY.md`](./LTM_SUMMARY.md) - Tóm tắt ngắn gọn
-- [`LTM_CONCEPTS.md`](./LTM_CONCEPTS.md) - Chi tiết đầy đủ
-- [`SOCKET_EXPLAINED.md`](./SOCKET_EXPLAINED.md) - Giải thích Socket, WebSocket, Socket.IO
+**Read details**:
+- [`LTM_SUMMARY.md`](./LTM_SUMMARY.md) - Brief summary
+- [`LTM_CONCEPTS.md`](./LTM_CONCEPTS.md) - Full details
+- [`SOCKET_EXPLAINED.md`](./SOCKET_EXPLAINED.md) - Explanation of Socket, WebSocket, Socket.IO
 
 ---
 
-## 🌐 Hỗ Trợ LAN & Internet
+## 🌐 LAN & Internet Support
 
-**Game hoạt động TỐT trên cả LAN và Internet!** ✅
+**Games work WELL on both LAN and Internet!** ✅
 
-| Môi Trường | Latency | Hiệu Suất |
+| Environment | Latency | Performance |
+
 |------------|---------|-----------|
-| **LAN** | <10ms | ⭐⭐⭐⭐⭐ Xuất sắc |
-| **Internet** | 50-200ms | ⭐⭐⭐⭐ Tốt |
 
-**Đọc chi tiết**: 
-- [`NETWORK_PERFORMANCE.md`](./NETWORK_PERFORMANCE.md) - Tóm tắt
-- [`LAN_INTERNET_SUPPORT.md`](./LAN_INTERNET_SUPPORT.md) - Chi tiết đầy đủ
+| **LAN** | <10ms | ⭐⭐⭐⭐⭐ Excellent |
+
+| **Internet** | 50-200ms | ⭐⭐⭐⭐ Good |
+
+**Read details**:
+- [`NETWORK_PERFORMANCE.md`](./NETWORK_PERFORMANCE.md) - Summary
+
+- [`LAN_INTERNET_SUPPORT.md`](./LAN_INTERNET_SUPPORT.md) - Full details
 
 ---
-
 ## 🌟 Features
 
 - ✅ **Real-time multiplayer** - Play with friends online
