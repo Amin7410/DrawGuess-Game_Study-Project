@@ -1,4 +1,4 @@
-# 🎨 DrawGuess - Multiplayer Drawing & Guessing Game
+# DrawGuess - Multiplayer Drawing & Guessing Game
 
 A real-time multiplayer game where players take turns drawing and guessing words. Built with Socket.IO, Express, and vanilla JavaScript.
 
@@ -6,17 +6,17 @@ A real-time multiplayer game where players take turns drawing and guessing words
 
 ---
 
-## 🎓 For Network Programming Course
+## For Network Programming Course
 
 **This project uses 15+ important LTM concepts**:
 
-- ✅ Client-Server Model
-- ✅ HTTP/HTTPS & WebSocket
-- ​​✅ Socket.IO (Namespaces, Rooms, Events)
+- Client-Server Model
+- HTTP/HTTPS & WebSocket
+- ​​Socket.IO (Namespaces, Rooms, Events)
 
-- ✅ Real-time Synchronization
-- ✅ State Management
-- ✅ CORS, Security, Performance
+- Real-time Synchronization
+- State Management
+- CORS, Security, Performance
 
 **Read details**:
 - [`LTM_SUMMARY.md`](./LTM_SUMMARY.md) - Brief summary
@@ -25,9 +25,9 @@ A real-time multiplayer game where players take turns drawing and guessing words
 
 ---
 
-## 🌐 LAN & Internet Support
+## LAN & Internet Support
 
-**Games work WELL on both LAN and Internet!** ✅
+**Games work WELL on both LAN and Internet!**
 
 | Environment | Latency | Performance |
 
@@ -45,16 +45,16 @@ A real-time multiplayer game where players take turns drawing and guessing words
 ---
 ## 🌟 Features
 
-- ✅ **Real-time multiplayer** - Play with friends online
-- ✅ **Quick Play** - Auto-generated room codes for instant games
-- ✅ **Custom Rooms** - Create private rooms with passwords
-- ✅ **Room Browser** - Browse and join available games
-- ✅ **Share Room Codes** - Easy sharing with copy-to-clipboard
-- ✅ **Drawing Tools** - Multiple colors, brush sizes, and eraser
-- ✅ **Chat System** - Real-time chat for guessers
-- ✅ **Scoring System** - Points based on guess speed
-- ✅ **Round Management** - Multiple rounds with automatic rotation
-- ✅ **Admin Panel** - Monitor server stats and active rooms
+- **Real-time multiplayer** - Play with friends online
+- **Quick Play** - Auto-generated room codes for instant games
+- **Custom Rooms** - Create private rooms with passwords
+- **Room Browser** - Browse and join available games
+- **Share Room Codes** - Easy sharing with copy-to-clipboard
+- **Drawing Tools** - Multiple colors, brush sizes, and eraser
+- **Chat System** - Real-time chat for guessers
+- **Scoring System** - Points based on guess speed
+- **Round Management** - Multiple rounds with automatic rotation
+- **Admin Panel** - Monitor server stats and active rooms
 
 ---
 
