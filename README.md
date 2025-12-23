@@ -43,7 +43,7 @@ A real-time multiplayer game where players take turns drawing and guessing words
 - [`LAN_INTERNET_SUPPORT.md`](./LAN_INTERNET_SUPPORT.md) - Full details
 
 ---
-## 🌟 Features
+## Features
 
 - **Real-time multiplayer** - Play with friends online
 - **Quick Play** - Auto-generated room codes for instant games
@@ -58,7 +58,7 @@ A real-time multiplayer game where players take turns drawing and guessing words
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 drawguess-enterprise/
@@ -91,7 +91,7 @@ drawguess-enterprise/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Local Development
 
@@ -118,7 +118,7 @@ Frontend runs at: `http://localhost:3000`
 
 ---
 
-## 🌐 Deploy to Render
+## Deploy to Render
 
 ### Option 1: Quick Deploy (Recommended)
 
@@ -134,7 +134,7 @@ See detailed guide: [`DEPLOY_QUICK.md`](./DEPLOY_QUICK.md)
 
 ---
 
-## 🎮 How to Play
+## How to Play
 
 ### Create a Room:
 1. Enter your name
@@ -157,7 +157,7 @@ See detailed guide: [`DEPLOY_QUICK.md`](./DEPLOY_QUICK.md)
 
 ---
 
-## 🔧 Tech Stack
+## Tech Stack
 
 ### Backend:
 - **Node.js** - Runtime
@@ -178,7 +178,7 @@ See detailed guide: [`DEPLOY_QUICK.md`](./DEPLOY_QUICK.md)
 
 ---
 
-## 📡 Network Architecture
+## Network Architecture
 
 ```
 ┌─────────────────────────────────────┐
@@ -218,7 +218,7 @@ See detailed guide: [`DEPLOY_QUICK.md`](./DEPLOY_QUICK.md)
 
 ---
 
-## 🎓 Network Programming Concepts
+## Network Programming Concepts
 
 This project demonstrates comprehensive network programming concepts:
 
@@ -245,7 +245,7 @@ This project demonstrates comprehensive network programming concepts:
 
 ---
 
-## 📊 Socket.IO Events
+## Socket.IO Events
 
 ### Lobby Events:
 - `get-room-list` - Get available rooms
@@ -276,18 +276,18 @@ This project demonstrates comprehensive network programming concepts:
 
 ---
 
-## 🔒 Security Features
+## Security Features
 
-- ✅ **Rate Limiting** - Prevent event spam (20 events/second)
-- ✅ **Input Validation** - Validate all user inputs
-- ✅ **Sanitization** - Clean chat messages (XSS prevention)
-- ✅ **Password Protection** - Optional room passwords
-- ✅ **CORS** - Whitelist allowed origins
-- ✅ **Room Validation** - Check room codes format
+- **Rate Limiting** - Prevent event spam (20 events/second)
+- **Input Validation** - Validate all user inputs
+- **Sanitization** - Clean chat messages (XSS prevention)
+- **Password Protection** - Optional room passwords
+- **CORS** - Whitelist allowed origins
+- **Room Validation** - Check room codes format
 
 ---
 
-## 📝 Environment Variables
+## Environment Variables
 
 ### Development:
 ```env
@@ -305,7 +305,7 @@ ALLOWED_ORIGINS=https://drawguess-game.onrender.com
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Connection Issues:
 - Check server URL in `config.js`
@@ -325,7 +325,7 @@ ALLOWED_ORIGINS=https://drawguess-game.onrender.com
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 - [`START_HERE.md`](./START_HERE.md) - Quick start guide
 - [`DEPLOY_INSTRUCTIONS.md`](./DEPLOY_INSTRUCTIONS.md) - Deploy to Render
@@ -337,20 +337,20 @@ ALLOWED_ORIGINS=https://drawguess-game.onrender.com
 
 ---
 
-## 💰 Cost
+## Cost
 
 **$0 - Completely FREE!**
 
 Using Render Free Tier:
-- ✅ 750 hours/month
-- ✅ 100GB bandwidth
-- ✅ WebSocket support
-- ✅ Auto SSL (HTTPS)
-- ⚠️ Sleeps after 15 minutes (wake up: 30-60s)
+- 750 hours/month
+- 100GB bandwidth
+- WebSocket support
+- Auto SSL (HTTPS)
+- Sleeps after 15 minutes (wake up: 30-60s)
 
 ---
 
-## 🎉 Demo
+## Demo
 
 **Live Demo**: `https://drawguess-game.onrender.com`
 
@@ -358,13 +358,13 @@ Using Render Free Tier:
 
 ---
 
-## 📄 License
+## License
 
 MIT License - Feel free to use for your projects!
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 **Amin7410**
 - GitHub: https://github.com/Amin7410
@@ -372,7 +372,7 @@ MIT License - Feel free to use for your projects!
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Socket.IO for real-time communication
 - Express for web framework
